@@ -4,7 +4,7 @@ LLM TTS Discord Bot using Coqui.ai. "Jenny" is named after the default model `tt
 Tested on Python `3.10.12`
 
 ```
-pip install -e .
+pip install -r requirements.txt
 ```
 
 Make a `secret.py` containing:
