@@ -4,6 +4,7 @@ import secret
 from TTS.api import TTS
 import discord
 from discord import app_commands
+import sys
 
 intents = discord.Intents.all()
 client = discord.Client(intents=intents)
@@ -16,13 +17,19 @@ exclusive_name = ""
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-# model options:
+# model examples:
 # "tts_models/ja/kokoro/tacotron2-DDC"
 # "tts_models/en/blizzard2013/capacitron-t2-c150_v2"
 # "tts_models/tgl/fairseq/vits"
 # "tts_models/es/mai/tacotron2-DDC"
 
-model_path = "tts_models/en/jenny/jenny" # make cl option
+if len(sys.argv) == 2:
+    model_path = sys.argv[1]
+    print(f"Using {model_path}")
+else:
+    model_path = "tts_models/en/jenny/jenny"
+    print(f"Defaulting to {model_path}")
+
 tts = TTS(model_path).to(device)
 
 @tree.command(name = "ping", description = "am i alive?")
@@ -71,7 +78,7 @@ async def on_message(message):
             await generate_voice_file(message_queue.pop(0))
             voice_client.play(discord.FFmpegPCMAudio("output.mp3"))
             while voice_client.is_playing():
-                await asyncio.sleep(1) 
+                await asyncio.sleep(1)
         except Exception as e:
             print(e)
             pass
@@ -82,12 +89,12 @@ async def on_message(message):
 @tree.command(name="join", description="hello")
 async def join_command(interaction):
     global listening_channel
-    global voice_client
     if listening_channel != None:
         await interaction.response.send_message(f"i am already listening to {listening_channel}. use /leave to change channels.", ephemeral=True, delete_after="5.0")
         return
     listening_channel = interaction.channel
     voice_channel = interaction.user.voice.channel
+    global voice_client
     voice_client = await voice_channel.connect()
     await interaction.response.send_message(f"listening to {listening_channel}", ephemeral=True, delete_after="5.0")
 
