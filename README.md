@@ -12,13 +12,18 @@ Make a `secret.py` containing:
 ```
 TOKEN = "<Discord Token string>"
 ```
-To run:
+
+## Usage
+
+
+Allows specifying TTS model when launching:
 
 ```
-python3 jenny.py
+python3 jenny.py <model-path>
 ```
 
-## Planned Features:
- - CLI options to specify which model to use
+While connected to a voice channel, use /join to have Jenny join your voice channel and begin reading the text channel. Then, use /leave for Jenny to leave and stop reading.
+
+## Planned Features
  - Extensive logging overhaul
  - Implement speech recipes for client side users
